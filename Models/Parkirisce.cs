@@ -8,5 +8,8 @@ public class Parkirisce
     public decimal CenaNaUro { get; set; }
     public string DelovniCas { get; set; } = string.Empty;
 
+    public double Latitude { get; set; }   // dodano
+    public double Longitude { get; set; }  // dodano
+
     public ICollection<ParkirnoMesto> ParkirnaMesta { get; set; } = new List<ParkirnoMesto>();
 }

@@ -1,8 +1,50 @@
-﻿@{
+﻿@model IEnumerable<SmartPark.Models.Parkirisce>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to SmartPark</h1>
+
+    <div id="map" style="height: 600px; width:100%;"></div>
 </div>
+
+@section Scripts {
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Inicializiramo zemljevid
+        var map = L.map('map').setView([46.0511, 14.5051], 17);
+
+        // Plain tile layer (minimalni zemljevid)
+        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+            maxZoom: 20
+        }).addTo(map);
+
+        // Prenesemo model v JS kot JSON
+        var parkirisca = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model,
+new System.Text.Json.JsonSerializerOptions {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+            }
+        ));
+        console.log(parkirisca);
+
+    // Dodamo markerje
+        parkirisca.forEach(function (p) {
+            if (p.Latitude && p.Longitude) {
+                var marker = L.marker([p.Latitude, p.Longitude]).addTo(map);
+                marker.bindPopup(
+                    "<b>" + p.Naslov + "</b><br>" +
+                    "Cena na uro: " + p.CenaNaUro + " €<br>" +
+                    "Delovni čas: " + p.DelovniCas + "<br>" +
+                    "Prosta mesta: " + p.ParkirnaMesta.filter(m => !m.Zasedeno).length
+                );
+            }
+        });
+
+    </script>
+}

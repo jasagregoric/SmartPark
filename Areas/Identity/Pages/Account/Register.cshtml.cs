@@ -103,6 +103,12 @@ namespace SmartPark.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                // Če je uporabnik že prijavljen, ga preusmeri na Home
+                Response.Redirect(Url.Action("Index", "Home"));
+            }
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -142,7 +148,7 @@ namespace SmartPark.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        return LocalRedirect(returnUrl ?? Url.Action("Index", "Home"));
                     }
                 }
                 foreach (var error in result.Errors)

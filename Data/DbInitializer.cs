@@ -46,7 +46,9 @@ public static class DbInitializer
                 Naslov = "Trg Republike 1, Ljubljana",
                 SteviloMest = 10,
                 CenaNaUro = 2.50m,
-                DelovniCas = "00:00–24:00"
+                DelovniCas = "00:00–24:00",
+                Latitude = 46.0511,
+                Longitude = 14.5051
             };
             ctx.Parkirisca.Add(p);
             await ctx.SaveChangesAsync();

@@ -116,7 +116,7 @@ namespace SmartPark.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect(returnUrl ?? Url.Action("Index", "Home"));
                 }
                 if (result.RequiresTwoFactor)
                 {
