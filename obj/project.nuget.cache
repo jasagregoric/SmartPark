@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "7+SaLSBxoxA=",
+  "dgSpecHash": "kZv8uqXJHaM=",
   "success": true,
   "projectFilePath": "D:\\Faks\\IS\\SmartPark\\SmartPark.csproj",
   "expectedPackageFiles": [
@@ -141,6 +141,7 @@
     "C:\\Users\\PC\\.nuget\\packages\\system.formats.nrbf\\9.0.0\\system.formats.nrbf.9.0.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.7.1\\system.identitymodel.tokens.jwt.7.7.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\system.memory.data\\8.0.1\\system.memory.data.8.0.1.nupkg.sha512",
+    "C:\\Users\\PC\\.nuget\\packages\\system.net.http.json\\10.0.0\\system.net.http.json.10.0.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\system.reflection.metadataloadcontext\\8.0.0\\system.reflection.metadataloadcontext.8.0.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\system.resources.extensions\\9.0.0\\system.resources.extensions.9.0.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",

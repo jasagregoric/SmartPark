@@ -18,11 +18,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<SmartParkContext>();
 
-// Dodaj MVC in Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(options =>
 {
-    // Vse strani in kontrolerji privzeto zahtevajo prijavo
     options.Conventions.AuthorizeFolder("/");
     options.Conventions.AllowAnonymousToPage("/Account/Login");
     options.Conventions.AllowAnonymousToPage("/Account/Register");
@@ -34,7 +32,8 @@ var app = builder.Build();
 // Inicializiraj bazo (seed)
 using (var scope = app.Services.CreateScope())
 {
-    await DbInitializer.SeedAsync(scope.ServiceProvider);
+    var services = scope.ServiceProvider;
+    await DbInitializer.SeedOverpassParking(services); // realna parkirišča iz Overpass
 }
 
 // Middleware pipeline
@@ -52,12 +51,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Route za kontrolerje
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Route za Razor Pages
 app.MapRazorPages();
 
 app.Run();

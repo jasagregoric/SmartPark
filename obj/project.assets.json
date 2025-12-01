@@ -2881,6 +2881,22 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "System.Net.Http.Json/10.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/System.Net.Http.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/System.Net.Http.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
       "System.Reflection.MetadataLoadContext/8.0.0": {
         "type": "package",
         "compile": {
@@ -7268,6 +7284,35 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "System.Net.Http.Json/10.0.0": {
+      "sha512": "aPu3f7W6+bSyAVoeNdhMRHEvaTRqJHDtwNY8svj7aEiveG1qzqXK4XHM6BvPsJDdfDmsH38QVfjuSxGmiglQaA==",
+      "type": "package",
+      "path": "system.net.http.json/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Net.Http.Json.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Net.Http.Json.targets",
+        "lib/net10.0/System.Net.Http.Json.dll",
+        "lib/net10.0/System.Net.Http.Json.xml",
+        "lib/net462/System.Net.Http.Json.dll",
+        "lib/net462/System.Net.Http.Json.xml",
+        "lib/net8.0/System.Net.Http.Json.dll",
+        "lib/net8.0/System.Net.Http.Json.xml",
+        "lib/net9.0/System.Net.Http.Json.dll",
+        "lib/net9.0/System.Net.Http.Json.xml",
+        "lib/netstandard2.0/System.Net.Http.Json.dll",
+        "lib/netstandard2.0/System.Net.Http.Json.xml",
+        "system.net.http.json.10.0.0.nupkg.sha512",
+        "system.net.http.json.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.Reflection.MetadataLoadContext/8.0.0": {
       "sha512": "SZxrQ4sQYnIcdwiO3G/lHZopbPYQ2lW0ioT4JezgccWUrKaKbHLJbAGZaDfkYjWcta1pWssAo3MOXLsR0ie4tQ==",
       "type": "package",
@@ -7452,7 +7497,8 @@
       "Microsoft.EntityFrameworkCore.Design >= 10.*",
       "Microsoft.EntityFrameworkCore.SqlServer >= 10.*",
       "Microsoft.EntityFrameworkCore.Tools >= 10.*",
-      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 10.0.0-rc.1.25458.5"
+      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 10.0.0-rc.1.25458.5",
+      "System.Net.Http.Json >= 10.0.0"
     ]
   },
   "packageFolders": {
@@ -7525,6 +7571,10 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[10.0.0-rc.1.25458.5, )"
+          },
+          "System.Net.Http.Json": {
+            "target": "Package",
+            "version": "[10.0.0, )"
           }
         },
         "imports": [
