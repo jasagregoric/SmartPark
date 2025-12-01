@@ -455,6 +455,7 @@ C:\fakulteta\IS\SmartPark\obj\Debug\net10.0\refint\SmartPark.dll
 C:\fakulteta\IS\SmartPark\obj\Debug\net10.0\SmartPark.pdb
 C:\fakulteta\IS\SmartPark\obj\Debug\net10.0\SmartPark.genruntimeconfig.cache
 C:\fakulteta\IS\SmartPark\obj\Debug\net10.0\ref\SmartPark.dll
+<<<<<<< Updated upstream
 D:\Faks\IS\SmartPark\bin\Debug\net10.0\BuildHost-net472\Microsoft.Build.Locator.dll
 D:\Faks\IS\SmartPark\bin\Debug\net10.0\BuildHost-net472\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe
 D:\Faks\IS\SmartPark\bin\Debug\net10.0\BuildHost-net472\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.exe.config
@@ -923,3 +924,6 @@ D:\Faks\IS\SmartPark\obj\Debug\net10.0\refint\SmartPark.dll
 D:\Faks\IS\SmartPark\obj\Debug\net10.0\SmartPark.pdb
 D:\Faks\IS\SmartPark\obj\Debug\net10.0\SmartPark.genruntimeconfig.cache
 D:\Faks\IS\SmartPark\obj\Debug\net10.0\ref\SmartPark.dll
+=======
+C:\fakulteta\IS\SmartPark\obj\Debug\net10.0\SmartPark.sourcelink.json
+>>>>>>> Stashed changes
