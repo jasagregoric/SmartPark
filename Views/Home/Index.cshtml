@@ -10,6 +10,52 @@
     <div id="map" style="height: 600px; width:100%;"></div>
 </div>
 
+<!-- Modal za rezervacijo -->
+<div class="modal fade" id="rezervacijaModal" tabindex="-1" aria-labelledby="rezervacijaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="/Rezervacije/Create">
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+          <h5 class="modal-title" id="rezervacijaModalLabel">Rezervacija parkirišča</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="parkId" name="ParkirisceId" />
+            <!-- skrito polje s ceno/uro (številska vrednost za izračun) -->
+            <input type="hidden" id="parkPrice" />
+
+            <div class="mb-3">
+                <label class="form-label">Parkirišče</label>
+                <input type="text" id="parkNaslov" class="form-control" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Začetek</label>
+                <input type="datetime-local" id="startTime" name="DatumZacetka" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Konec</label>
+                <input type="datetime-local" id="endTime" name="DatumKoncA" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Cena na uro</label>
+                <input type="text" id="parkCena" class="form-control" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Skupna cena</label>
+                <input type="text" id="totalPrice" class="form-control" readonly value="0.00 €" />
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+          <button type="submit" class="btn btn-primary">Rezerviraj</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 @section Scripts {
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -33,7 +79,18 @@ new System.Text.Json.JsonSerializerOptions {
         ));
         console.log(parkirisca);
 
-    // Dodamo markerje
+    // Funkcija za prikaz modala (Bootstrap 5 ali fallback jQuery)
+    function showRezervacijaModal() {
+        var modalEl = document.getElementById('rezervacijaModal');
+        if (typeof bootstrap !== 'undefined') {
+            var modal = new bootstrap.Modal(modalEl);
+            modal.show();
+        } else if (window.jQuery) {
+            $('#rezervacijaModal').modal('show');
+        }
+    }
+
+    // Napolnimo in prikažemo modal ob kliku na marker
         parkirisca.forEach(function (p) {
             if (p.Latitude && p.Longitude) {
                 var marker = L.marker([p.Latitude, p.Longitude]).addTo(map);
@@ -41,10 +98,67 @@ new System.Text.Json.JsonSerializerOptions {
                     "<b>" + p.Naslov + "</b><br>" +
                     "Cena na uro: " + p.CenaNaUro + " €<br>" +
                     "Delovni čas: " + p.DelovniCas + "<br>" +
-                    "Prosta mesta: " + p.ParkirnaMesta.filter(m => !m.Zasedeno).length
+                    "Prosta mesta: " + (p.ParkirnaMesta ? p.ParkirnaMesta.filter(m => !m.Zasedeno).length : 'N/A') + "<br><button class='btn btn-sm btn-primary mt-2' onclick='openRezervacija(" + p.Id + ")'>Rezerviraj</button>"
                 );
+
+                // Odprtje modala preko funkcije (v primeru če uporabnik klikne marker brez popup gumba)
+                marker.on('click', function () {
+                    fillAndShowModal(p);
+                });
             }
         });
 
+    // Funkcija, ki napolni modal polja in ga prikaže
+    function fillAndShowModal(p) {
+        document.getElementById('parkId').value = p.Id || '';
+        document.getElementById('parkNaslov').value = p.Naslov || '';
+        // shranimo ceno/uro kot številsko vrednost v skrito polje za izračun
+        document.getElementById('parkPrice').value = (p.CenaNaUro !== undefined ? p.CenaNaUro : 0);
+        document.getElementById('parkCena').value = p.CenaNaUro !== undefined ? p.CenaNaUro + ' €' : '';
+        // reset datuma in skupne cene
+        document.getElementById('startTime').value = '';
+        document.getElementById('endTime').value = '';
+        updateTotal();
+        showRezervacijaModal();
+    }
+
+    // Globalna funkcija, ki jo kliče gumb v popupu
+    function openRezervacija(id) {
+        var p = parkirisca.find(x => x.Id === id);
+        if (p) fillAndShowModal(p);
+    }
+
+    // Izračun skupne cene glede na izbrani čas
+    function updateTotal() {
+        var start = document.getElementById('startTime').value;
+        var end = document.getElementById('endTime').value;
+        var pricePerHour = parseFloat(document.getElementById('parkPrice').value) || 0;
+
+        if (!start || !end) {
+            document.getElementById('totalPrice').value = '0.00 €';
+            return;
+        }
+
+        var startDate = new Date(start);
+        var endDate = new Date(end);
+        var diffMs = endDate - startDate;
+        if (isNaN(diffMs) || diffMs <= 0) {
+            document.getElementById('totalPrice').value = '0.00 €';
+            return;
+        }
+
+        var hours = diffMs / (1000 * 60 * 60); // decimalne ure
+        var total = hours * pricePerHour;
+        // prikažemo z dvema decimalkama
+        document.getElementById('totalPrice').value = total.toFixed(2) + ' €';
+    }
+
+    // poslušalci za polji datuma
+    document.addEventListener('DOMContentLoaded', function () {
+        var startEl = document.getElementById('startTime');
+        var endEl = document.getElementById('endTime');
+        if (startEl) startEl.addEventListener('change', updateTotal);
+        if (endEl) endEl.addEventListener('change', updateTotal);
+    });
     </script>
 }

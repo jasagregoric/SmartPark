@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using SmartPark.Models;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace SmartPark.Data;
 
@@ -65,4 +67,21 @@ public static class DbInitializer
             await ctx.SaveChangesAsync();
         }
     }
+
+
+    public static async Task SeedOverpassParking(IServiceProvider services)
+    {
+        using var scope = services.CreateScope();
+        var ctx = scope.ServiceProvider.GetRequiredService<SmartParkContext>();
+
+        
+        var httpClient = new HttpClient();
+        var api = new OverpassApiHelper(httpClient);
+        var parkirisca = await api.GetParkiriscaLjubljanaAsync();
+
+        ctx.Parkirisca.AddRange(parkirisca);
+        await ctx.SaveChangesAsync();
+        
+    }
+
 }
