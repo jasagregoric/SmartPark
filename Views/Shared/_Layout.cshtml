@@ -36,6 +36,15 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Rezervacije" asp-action="Index">
+                                    Moje rezervacije
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

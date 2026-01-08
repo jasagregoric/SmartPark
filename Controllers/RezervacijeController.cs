@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using SmartPark.Data;
 using SmartPark.Models;
+using System.Security.Claims;
 
 namespace SmartPark.Controllers
 {
@@ -17,7 +18,26 @@ namespace SmartPark.Controllers
             _userManager = userManager;
         }
 
-        //API endpoint za prvo prosto parkirno mesto
+        // 📌 Seznam rezervacij za prijavljenega uporabnika
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Unauthorized();
+
+            var rezervacije = await _context.Rezervacije
+                .Include(r => r.Parkirisce)
+                .Include(r => r.ParkirnoMesto)
+                .Where(r => r.ApplicationUserId == userId)
+                .OrderByDescending(r => r.Zacetek)
+                .ToListAsync();
+
+            return View(rezervacije);
+        }
+
+        // 📌 API endpoint za prvo prosto parkirno mesto
         [HttpGet]
         public async Task<IActionResult> GetProstoMesto(int parkirisceId, DateTime zacetek, DateTime konec)
         {
@@ -34,13 +54,10 @@ namespace SmartPark.Controllers
             return Json(mesto);
         }
 
-
-        // 🔥 Create rezervacije (če ga še nimaš)
+        // 📌 Create rezervacije
         [HttpPost]
         public async Task<IActionResult> Create(int ParkirisceId, int ParkirnoMestoId, DateTime DatumZacetka, DateTime DatumKonca)
         {
-            Console.WriteLine($"DEBUG: ParkirnoMestoId = {ParkirnoMestoId}");
-
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
@@ -57,7 +74,6 @@ namespace SmartPark.Controllers
                 DateCreated = DateTime.Now
             };
 
-            
             var pm = await _context.ParkirnaMesta.FindAsync(ParkirnoMestoId);
 
             if (pm == null)
@@ -70,13 +86,10 @@ namespace SmartPark.Controllers
                 return BadRequest($"Parkirno mesto {ParkirnoMestoId} ne pripada parkirišču {ParkirisceId}.");
             }
 
-            
             _context.Rezervacije.Add(rezervacija);
-
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
-
     }
 }
