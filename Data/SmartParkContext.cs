@@ -7,7 +7,6 @@ namespace SmartPark.Data;
 public class SmartParkContext : IdentityDbContext<ApplicationUser>
 {
     public SmartParkContext(DbContextOptions<SmartParkContext> options) : base(options) { }
-
     public DbSet<Parkirisce> Parkirisca { get; set; }
     public DbSet<ParkirnoMesto> ParkirnaMesta { get; set; }
     public DbSet<Rezervacija> Rezervacije { get; set; }

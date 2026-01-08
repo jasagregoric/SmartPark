@@ -23,11 +23,10 @@ namespace SmartPark.Data
             string query = @"[out:json];
                             area[""name""=""Ljubljana""]->.searchArea;
                             (
-                            node[""amenity""=""parking""][""name""](area.searchArea);
-                            way[""amenity""=""parking""][""name""](area.searchArea);
+                              node[""amenity""=""parking""][""name""](area.searchArea);
+                              way[""amenity""=""parking""][""name""](area.searchArea);
                             );
                             out center;";
-
 
             var apiUrl = "https://overpass-api.de/api/interpreter?data=" + Uri.EscapeDataString(query);
 
@@ -40,30 +39,40 @@ namespace SmartPark.Data
                     double lat = 0;
                     double lon = 0;
 
-                    // Nekateri "way" elementi imajo center
+                    // Node ali center od way
                     if (e.TryGetProperty("lat", out var latElem))
                         lat = latElem.GetDouble();
-                    else if (e.TryGetProperty("center", out var center) && center.TryGetProperty("lat", out var latC))
+                    else if (e.TryGetProperty("center", out var center) &&
+                             center.TryGetProperty("lat", out var latC))
                         lat = latC.GetDouble();
 
                     if (e.TryGetProperty("lon", out var lonElem))
                         lon = lonElem.GetDouble();
-                    else if (e.TryGetProperty("center", out var center2) && center2.TryGetProperty("lon", out var lonC))
+                    else if (e.TryGetProperty("center", out var center2) &&
+                             center2.TryGetProperty("lon", out var lonC))
                         lon = lonC.GetDouble();
 
-                    if (lat == 0 || lon == 0) continue; // preskoči napačne koordinate
+                    if (lat == 0 || lon == 0)
+                        continue;
 
-                    string name = e.GetProperty("tags").TryGetProperty("name", out var nameElem) ? nameElem.GetString() : "Parkirišče brez naslova";
-
-                    int steviloMest = 0;
-                    if (e.TryGetProperty("tags", out var tags) && tags.TryGetProperty("capacity", out var capElem))
+                    // Ime
+                    string name = "Parkirišče brez naslova";
+                    if (e.TryGetProperty("tags", out var tags) &&
+                        tags.TryGetProperty("name", out var nameElem))
                     {
-                        var capStr = capElem.GetString();
-                        if (!int.TryParse(capStr, out steviloMest))
-                            steviloMest = 0; 
+                        name = nameElem.GetString() ?? name;
                     }
 
-                    int prostaMesta = steviloMest; 
+                    // Capacity
+                    int steviloMest = 0;
+                    if (e.TryGetProperty("tags", out var tags2) &&
+                        tags2.TryGetProperty("capacity", out var capElem))
+                    {
+                        var capStr = capElem.GetString();
+                        int.TryParse(capStr, out steviloMest);
+                    }
+
+                    // 🔥 FILTRIRANJE: preskoči parkirišča brez kapacitete
 
                     parkirisca.Add(new Parkirisce
                     {

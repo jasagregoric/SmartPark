@@ -6,7 +6,6 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to SmartPark</h1>
-
     <div id="map" style="height: 600px; width:100%;"></div>
 </div>
 
@@ -20,23 +19,27 @@
           <h5 class="modal-title" id="rezervacijaModalLabel">Rezervacija parkirišča</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
         <div class="modal-body">
             <input type="hidden" id="parkId" name="ParkirisceId" />
-            <!-- skrito polje s ceno/uro (številska vrednost za izračun) -->
             <input type="hidden" id="parkPrice" />
+            <input type="hidden" id="parkirnoMestoId" name="ParkirnoMestoId" />
 
             <div class="mb-3">
                 <label class="form-label">Parkirišče</label>
                 <input type="text" id="parkNaslov" class="form-control" readonly />
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Začetek</label>
                 <input type="datetime-local" id="startTime" name="DatumZacetka" class="form-control" required />
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Konec</label>
-                <input type="datetime-local" id="endTime" name="DatumKoncA" class="form-control" required />
+                <input type="datetime-local" id="endTime" name="DatumKonca" class="form-control" required />
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Cena na uro</label>
                 <input type="text" id="parkCena" class="form-control" readonly />
@@ -47,6 +50,7 @@
                 <input type="text" id="totalPrice" class="form-control" readonly value="0.00 €" />
             </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
           <button type="submit" class="btn btn-primary">Rezerviraj</button>
@@ -57,108 +61,131 @@
 </div>
 
 @section Scripts {
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-        // Inicializiramo zemljevid
-        var map = L.map('map').setView([46.0511, 14.5051], 17);
+<script>
+    var map = L.map('map').setView([46.0511, 14.5051], 17);
 
-        // Plain tile layer (minimalni zemljevid)
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-            maxZoom: 20
-        }).addTo(map);
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; Stadia Maps &copy; OSM',
+        maxZoom: 20
+    }).addTo(map);
 
-        // Prenesemo model v JS kot JSON
-        var parkirisca = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    var parkirisca = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
         Model,
-new System.Text.Json.JsonSerializerOptions {
+        new System.Text.Json.JsonSerializerOptions {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-            }
-        ));
-        console.log(parkirisca);
-
-    // Funkcija za prikaz modala (Bootstrap 5 ali fallback jQuery)
-    function showRezervacijaModal() {
-        var modalEl = document.getElementById('rezervacijaModal');
-        if (typeof bootstrap !== 'undefined') {
-            var modal = new bootstrap.Modal(modalEl);
-            modal.show();
-        } else if (window.jQuery) {
-            $('#rezervacijaModal').modal('show');
         }
+    ));
+
+    async function fetchProstoMesto() {
+        var parkId = document.getElementById('parkId').value;
+        var start = document.getElementById('startTime').value;
+        var end = document.getElementById('endTime').value;
+
+        console.log("fetchProstoMesto() klican");
+        console.log("parkId:", parkId, "start:", start, "end:", end);
+
+        if (!parkId || !start || !end) {
+            console.log("Manjkajo parametri, ne kličem API.");
+            return;
+        }
+
+        const url = `/Rezervacije/GetProstoMesto?parkirisceId=${parkId}&zacetek=${start}&konec=${end}`;
+        console.log("Kličem URL:", url);
+
+        const res = await fetch(url);
+        const mestoId = await res.json();
+
+        console.log("API vrnil mestoId:", mestoId);
+
+        document.getElementById('parkirnoMestoId').value = mestoId;
+        console.log("parkirnoMestoId po nastavitvi:", document.getElementById('parkirnoMestoId').value);
     }
 
-    // Napolnimo in prikažemo modal ob kliku na marker
-        parkirisca.forEach(function (p) {
-            if (p.Latitude && p.Longitude) {
-                var marker = L.marker([p.Latitude, p.Longitude]).addTo(map);
-                marker.bindPopup(
-                    "<b>" + p.Naslov + "</b><br>" +
-                    "Cena na uro: " + p.CenaNaUro + " €<br>" +
-                    "Delovni čas: " + p.DelovniCas + "<br>" +
-                    "Prosta mesta: " + (p.ParkirnaMesta ? p.ParkirnaMesta.filter(m => !m.Zasedeno).length : 'N/A') + "<br><button class='btn btn-sm btn-primary mt-2' onclick='openRezervacija(" + p.Id + ")'>Rezerviraj</button>"
-                );
+    function showRezervacijaModal() {
+        var modalEl = document.getElementById('rezervacijaModal');
+        var modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    }
 
-                // Odprtje modala preko funkcije (v primeru če uporabnik klikne marker brez popup gumba)
-                marker.on('click', function () {
-                    fillAndShowModal(p);
-                });
-            }
-        });
+    // marker klik NE odpira modala, samo popup
+    parkirisca.forEach(function (p) {
+        if (p.Latitude && p.Longitude) {
+            var marker = L.marker([p.Latitude, p.Longitude]).addTo(map);
 
-    // Funkcija, ki napolni modal polja in ga prikaže
+            marker.bindPopup(
+                "<b>" + p.Naslov + "</b><br>" +
+                "Cena na uro: " + p.CenaNaUro + " €<br>" +
+                "Delovni čas: " + p.DelovniCas + "<br>" +
+                "Prosta mesta: " + (p.ParkirnaMesta ? p.ParkirnaMesta.filter(m => !m.Zasedeno).length : 'N/A') +
+                "<br><button class='btn btn-sm btn-primary mt-2' onclick='openRezervacija(" + p.Id + ")'>Rezerviraj</button>"
+            );
+        }
+    });
+
     function fillAndShowModal(p) {
-        document.getElementById('parkId').value = p.Id || '';
-        document.getElementById('parkNaslov').value = p.Naslov || '';
-        // shranimo ceno/uro kot številsko vrednost v skrito polje za izračun
-        document.getElementById('parkPrice').value = (p.CenaNaUro !== undefined ? p.CenaNaUro : 0);
-        document.getElementById('parkCena').value = p.CenaNaUro !== undefined ? p.CenaNaUro + ' €' : '';
-        // reset datuma in skupne cene
-        document.getElementById('startTime').value = '';
-        document.getElementById('endTime').value = '';
-        updateTotal();
+        console.log("fillAndShowModal za parkirišče:", p.Id);
+
+        document.getElementById('parkId').value = p.Id;
+        document.getElementById('parkNaslov').value = p.Naslov;
+        document.getElementById('parkPrice').value = p.CenaNaUro;
+        document.getElementById('parkCena').value = p.CenaNaUro + " €";
+
+        document.getElementById('startTime').value = "";
+        document.getElementById('endTime').value = "";
+        document.getElementById('totalPrice').value = "0.00 €";
+        document.getElementById('parkirnoMestoId').value = "";
+
+        // listenerje VEŽEMO SAMO TUKAJ
+        document.getElementById('startTime').onchange = updateTotal;
+        document.getElementById('endTime').onchange = updateTotal;
+
         showRezervacijaModal();
     }
 
-    // Globalna funkcija, ki jo kliče gumb v popupu
     function openRezervacija(id) {
         var p = parkirisca.find(x => x.Id === id);
         if (p) fillAndShowModal(p);
     }
 
-    // Izračun skupne cene glede na izbrani čas
     function updateTotal() {
         var start = document.getElementById('startTime').value;
         var end = document.getElementById('endTime').value;
         var pricePerHour = parseFloat(document.getElementById('parkPrice').value) || 0;
 
+        console.log("updateTotal() klican, start:", start, "end:", end);
+
         if (!start || !end) {
-            document.getElementById('totalPrice').value = '0.00 €';
+            document.getElementById('totalPrice').value = "0.00 €";
             return;
         }
 
         var startDate = new Date(start);
         var endDate = new Date(end);
         var diffMs = endDate - startDate;
-        if (isNaN(diffMs) || diffMs <= 0) {
-            document.getElementById('totalPrice').value = '0.00 €';
+
+        if (diffMs <= 0) {
+            document.getElementById('totalPrice').value = "0.00 €";
             return;
         }
 
-        var hours = diffMs / (1000 * 60 * 60); // decimalne ure
+        var hours = diffMs / (1000 * 60 * 60);
         var total = hours * pricePerHour;
-        // prikažemo z dvema decimalkama
-        document.getElementById('totalPrice').value = total.toFixed(2) + ' €';
+
+        document.getElementById('totalPrice').value = total.toFixed(2) + " €";
+
+        fetchProstoMesto();
     }
 
-    // poslušalci za polji datuma
+    // DEBUG: pred submitom izpišemo vrednosti
     document.addEventListener('DOMContentLoaded', function () {
-        var startEl = document.getElementById('startTime');
-        var endEl = document.getElementById('endTime');
-        if (startEl) startEl.addEventListener('change', updateTotal);
-        if (endEl) endEl.addEventListener('change', updateTotal);
+        var form = document.querySelector('#rezervacijaModal form');
+        form.addEventListener('submit', function (e) {
+            console.log("SUBMIT!");
+            console.log("ParkirisceId:", document.getElementById('parkId').value);
+            console.log("ParkirnoMestoId (input):", document.getElementById('parkirnoMestoId').value);
+        });
     });
-    </script>
+</script>
 }
