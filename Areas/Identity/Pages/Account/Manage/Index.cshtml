@@ -20,6 +20,13 @@
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.RegistrskaStevilka" class="form-control" placeholder="Vnesi registrsko številko" />
+                <label asp-for="Input.RegistrskaStevilka" class="form-label"></label>
+                <span asp-validation-for="Input.RegistrskaStevilka" class="text-danger"></span>
+            </div>
+
+
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
     </div>

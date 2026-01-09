@@ -82,20 +82,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRGVsZXRlUGVyc29uYWxEYXRhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/Disable2fa.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRGlzYWJsZTJmYS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/DownloadPersonalData.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRG93bmxvYWRQZXJzb25hbERhdGEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/Email.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRW1haWwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/EnableAuthenticator.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRW5hYmxlQXV0aGVudGljYXRvci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/ExternalLogins.cshtml]
@@ -124,10 +116,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/ShowRecoveryCodes.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcU2hvd1JlY292ZXJ5Q29kZXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/TwoFactorAuthentication.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcVHdvRmFjdG9yQXV0aGVudGljYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/fakulteta/IS/SmartPark/Areas/Identity/Pages/Account/Manage/_Layout.cshtml]

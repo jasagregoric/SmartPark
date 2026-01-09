@@ -6,5 +6,6 @@ public class ApplicationUser : IdentityUser
 {
     public string? FirstName { get; set; }
     public string? LastName  { get; set; }
-    public string? LicensePlate { get; set; }
+    public string? RegistrskaStevilka { get; set; }
+
 }

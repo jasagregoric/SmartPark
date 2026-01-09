@@ -34,7 +34,7 @@ public static class DbInitializer
                 FirstName = "Smart",
                 LastName = "Admin",
                 EmailConfirmed = true,
-                LicensePlate = "GO-1234"
+                RegistrskaStevilka = "GO-1234"
             };
             await userManager.CreateAsync(admin, "Admin!234"); // močno geslo
             await userManager.AddToRoleAsync(admin, "Administrator");

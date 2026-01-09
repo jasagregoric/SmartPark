@@ -72,8 +72,6 @@ namespace SmartPark.Data
                         int.TryParse(capStr, out steviloMest);
                     }
 
-                    // 🔥 FILTRIRANJE: preskoči parkirišča brez kapacitete
-
                     parkirisca.Add(new Parkirisce
                     {
                         Naslov = name,

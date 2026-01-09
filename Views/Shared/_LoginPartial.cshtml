@@ -10,7 +10,7 @@
         <li class="nav-item user-greeting">
             <a id="manage" class="nav-link user-pill" 
                asp-area="Identity" asp-page="/Account/Manage/Index">
-                👋 @UserManager.GetUserName(User)
+                @UserManager.GetUserName(User)
             </a>
         </li>
 
