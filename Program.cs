@@ -25,6 +25,10 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Account/Register");
 });
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.None);
+
 // Build aplikacijo
 var app = builder.Build();
 
@@ -34,7 +38,7 @@ app.MapControllerRoute( name: "default", pattern: "{controller=Home}/{action=Ind
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await DbInitializer.SeedOverpassParking(services); // realna parkirišča iz Overpass
+    //await DbInitializer.SeedOverpassParking(services); // realna parkirišča iz Overpass
 }
 
 // Middleware pipeline

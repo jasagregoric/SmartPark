@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using SmartPark.Data;
 using SmartPark.Models;
-using System.Security.Claims;
 
 namespace SmartPark.Controllers
 {
@@ -54,12 +53,11 @@ namespace SmartPark.Controllers
             return Json(mesto);
         }
 
-        // 📌 Create rezervacije
+        // 📌 Create rezervacije (brez plačila)
         [HttpPost]
         public async Task<IActionResult> Create(int ParkirisceId, int ParkirnoMestoId, DateTime DatumZacetka, DateTime DatumKonca)
         {
             var userId = _userManager.GetUserId(User);
-
             if (userId == null)
                 return Unauthorized();
 
@@ -70,26 +68,26 @@ namespace SmartPark.Controllers
                 Zacetek = DatumZacetka,
                 Konec = DatumKonca,
                 ApplicationUserId = userId,
-                Status = 0,
                 DateCreated = DateTime.Now
             };
 
             var pm = await _context.ParkirnaMesta.FindAsync(ParkirnoMestoId);
-
             if (pm == null)
-            {
                 return BadRequest($"Parkirno mesto {ParkirnoMestoId} ne obstaja.");
-            }
 
             if (pm.ParkirisceId != ParkirisceId)
-            {
                 return BadRequest($"Parkirno mesto {ParkirnoMestoId} ne pripada parkirišču {ParkirisceId}.");
-            }
 
+            // 🔥 Dodamo rezervacijo
             _context.Rezervacije.Add(rezervacija);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            // Vrni JSON, da frontend lahko odpre modal za plačilo
+            return Json(new
+            {
+                success = true,
+                rezervacijaId = rezervacija.Id
+            });
         }
     }
 }
