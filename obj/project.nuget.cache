@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "hUC41cTbLxs=",
+  "dgSpecHash": "dbXG+ccU16I=",
   "success": true,
   "projectFilePath": "C:\\fakulteta\\IS\\SmartPark\\SmartPark.csproj",
   "expectedPackageFiles": [
@@ -163,7 +163,8 @@
       "filePath": "C:\\fakulteta\\IS\\SmartPark\\SmartPark.csproj",
       "libraryId": "Microsoft.Build",
       "targetGraphs": [
-        "net10.0"
+        "net10.0",
+        "net10.0/win-x64"
       ]
     },
     {
@@ -175,7 +176,8 @@
       "filePath": "C:\\fakulteta\\IS\\SmartPark\\SmartPark.csproj",
       "libraryId": "Microsoft.Build",
       "targetGraphs": [
-        "net10.0"
+        "net10.0",
+        "net10.0/win-x64"
       ]
     }
   ]
