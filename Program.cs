@@ -14,6 +14,9 @@ builder.Services.AddDbContext<SmartParkContext>(options =>
 var connectionString = builder.Configuration.GetConnectionString("SmartParkContext");
 builder.Services.AddDbContext<SmartParkContext>(options => options.UseSqlServer(connectionString));
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SmartParkContext")));
+
 // Dodaj Identity z vlogami
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         options.SignIn.RequireConfirmedAccount = false)
