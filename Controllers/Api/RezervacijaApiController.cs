@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartPark.Data;
 using SmartPark.Models;
+using SmartPark.Filters;
 
 namespace SmartPark.Controllers_Api
 {
     [Route("api/v1/rezervacije")]
     [ApiController]
+    [ApiKeyAuthAttribute]
     public class RezervacijaApiController : ControllerBase
     {
         private readonly AppDbContext _context;

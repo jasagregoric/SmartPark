@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartPark.Data;
 using SmartPark.Models;
+using SmartPark.Filters;
 
 namespace SmartPark.Controllers_Api
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/placila")]
     [ApiController]
     public class PlaciloApiController : ControllerBase
     {
