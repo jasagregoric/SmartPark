@@ -9,10 +9,10 @@
 ## 🖼️ Zaslonske slike
 ### Mobilna aplikacija
 1. Seznam parkirišč  
-   <img src="docs/screenshots/mobile-login.png" alt="Seznam parkirišč" height="500"/>
+   <img src="docs/screenshots/mslika1.jpg" alt="Seznam parkirišč" height="500"/>
 
 2. Dodajanje prakirišča
-   <img src="docs/screenshots/mobile-login.png" alt="Dodaja parkirišča" height="500"/>
+   <img src="docs/screenshots/mslika2.jpg" alt="Dodaja parkirišča" height="500"/>
 
 ### Spletna aplikacija
 3. Domača stran z zemljevidom  
