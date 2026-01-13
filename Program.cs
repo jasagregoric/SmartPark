@@ -7,12 +7,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
+builder.Services.AddDbContext<SmartParkContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SmartParkContext") ?? throw new InvalidOperationException("Connection string 'SmartParkContext' not found.")));
 
 // Connection string
 var connectionString = builder.Configuration.GetConnectionString("SmartParkContext");
 builder.Services.AddDbContext<SmartParkContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SmartParkContext")));
 
 // Dodaj Identity z vlogami
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
