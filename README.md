@@ -1,12 +1,12 @@
 # SmartPark – Sistem za upravljanje parkirišč
 
-## 📌 Avtorji
+## Avtorji
 - **Jaša Gregorič 63240100**
 - **Nihad Ajdaroski 63240003**
 
 ---
 
-## 🖼️ Zaslonske slike
+## Zaslonske slike
 ### Mobilna aplikacija
 #### 1. Seznam parkirišč
 <img src="docs/screenshots/mslika1.jpg" alt="Seznam parkirišč" height="500"/>
@@ -27,44 +27,64 @@
 
 ---
 
-## 📝 Opis sistema
+## Opis sistema
 SmartPark je integriran sistem, ki povezuje **mobilno aplikacijo**, **spletno aplikacijo** in **.NET REST API**:
 
-- **Mobilna aplikacija**: omogoča uporabnikom prijavo, pregled parkirišč na interaktivnem zemljevidu, rezervacijo in plačilo.  
-- **Spletna aplikacija**: administratorski vmesnik za pregled rezervacij, upravljanje parkirišč in uporabnikov.  
-- **REST API**: implementiran v ASP.NET Core, podpira CRUD operacije nad parkirišči in rezervacijami, vrača podatke v JSON formatu, dokumentiran s Swagger UI ter zaščiten z avtentikacijo (Identity + JWT).
+- **Mobilna aplikacija**: omogoča uporabnikom pregled parkirišč in vnos novih parkirišč.  
+- **Spletna aplikacija**: Omogoča uporabnikom prijavo, rezerviranje poljubnega parkirišča ter ogled njihovih rezervacij.  
+- **REST API**: implementiran v ASP.NET Core, podpira CRUD operacije nad parkirišči, vrača podatke v JSON formatu, dokumentiran s Swagger UI.
 
 ---
 
-## 👨‍💻 Prispevki študentov
+## Prispevki študentov
 - **Jaša**  
-  - Implementacija REST API (CRUD za parkirišča in rezervacije).  
-  - Integracija EF Core z Azure SQL.  
-  - Swagger dokumentacija.  
-  - Leaflet zemljevid v spletni aplikaciji.  
+  - Integracija EF Core z Azure SQL.
+  - Razvoj spletne aplikacija.
+  - Načrt in vzpostavitev podatkovne baze.
+  - Objava spletne strani.
+  - Dokumentacija
+  
 
-- **Soavtor 1**  
-  - Razvoj mobilne aplikacije (UI, zemljevid, rezervacije).  
-  - Integracija z API.  
-
-- **Soavtor 2**  
-  - Oblikovanje podatkovnega modela.  
-  - Implementacija avtentikacije in avtorizacije (Identity, JWT).  
-  - Testiranje in priprava poročila.  
+- **Nihad**  
+  - Razvoj mobilne aplikacije.  
+  - Integracija z API.
+  - Implementacija REST API.  
+  - Swagger dokumentacija.
+  - Leaflet zemljevid v spletni aplikaciji.
 
 ---
 
-## 🗂️ Podatkovni model
-![Podatkovni model](docs/db-model.png)
+## Podatkovni model
+![Podatkovni model](docs/db.png)
 
-### Opis modela
-- **Parkirisce**: vsebuje naslov, koordinate, ceno na uro in delovni čas.  
-- **Rezervacija**: povezana s parkiriščem in uporabnikom, vsebuje čas začetka, trajanje in status.  
-- **Uporabnik (Identity)**: vsebuje prijavne podatke in vloge (User/Admin).  
+### Opis podatkovnega modela
 
-Relacije:
+- **Parkirisce**  
+  Vsebuje osnovne podatke o parkirišču: naslov, število mest, ceno na uro, delovni čas ter geografske koordinate (latitude, longitude).  
+
+- **ParkirnoMesto**  
+  Predstavlja posamezno parkirno mesto znotraj parkirišča. Vsebuje referenco na parkirišče, informacijo o zasedenosti, tip mesta in številko.  
+
+- **Rezervacija**  
+  Povezana je z uporabnikom, parkiriščem in konkretnim parkirnim mestom. Vsebuje čas začetka in konca, status rezervacije, lastnika ter metapodatke o ustvarjanju/urejanju.  
+
+- **Uporabnik (AspNetUsers)**  
+  Identity tabela, ki vsebuje prijavne podatke, osebne podatke (ime, priimek, registrska številka), kontaktne podatke ter varnostne nastavitve.  
+
+- **Plačilo**  
+  Povezano je z rezervacijo in uporabnikom. Vsebuje znesek, način plačila ter datum izvedbe.  
+
+---
+
+### Relacije
+
+- `Parkirisce` 1—N `ParkirnoMesto`  
 - `Parkirisce` 1—N `Rezervacija`  
-- `Uporabnik` 1—N `Rezervacija`
+- `ParkirnoMesto` 1—N `Rezervacija`  
+- `Uporabnik (AspNetUsers)` 1—N `Rezervacija`  
+- `Uporabnik (AspNetUsers)` 1—N `Plačilo`  
+- `Rezervacija` 1—1 `Plačilo`
+
 
 ---
 
