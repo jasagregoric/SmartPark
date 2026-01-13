@@ -3,8 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using SmartPark.Data;
 using SmartPark.Models;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.")));
 
 // Connection string
 var connectionString = builder.Configuration.GetConnectionString("SmartParkContext");
@@ -29,6 +33,8 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.None);
 
+builder.Services.AddSwaggerGen();
+
 // Build aplikacijo
 var app = builder.Build();
 
@@ -50,6 +56,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+}); 
 
 app.UseRouting();
 
